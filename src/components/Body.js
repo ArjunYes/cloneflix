@@ -2,7 +2,7 @@ import React from "react";
 import Error from "./Error";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Browse from "./Browse";
-import Login from "../Login";
+import Login from "../components/Login";
 
 function Body() {
   const appRouter = createBrowserRouter([
