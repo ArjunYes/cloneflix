@@ -16,7 +16,7 @@ const Signinupform = () => {
             type="text"
           />
           {
-            <input
+            <input 
               className="bg-gray-200 rounded py-3 px-4 mb-2 w-80"
               placeholder="Password"
               type="text"
