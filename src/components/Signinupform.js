@@ -1,5 +1,10 @@
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import React, { useRef, useState } from "react";
 import { validateSignIn } from "../utils/validateSignIn";
+import { auth } from "../utils/firebase";
 
 const Signinupform = () => {
   const [signIn, setSignIn] = useState(true);
@@ -9,7 +14,6 @@ const Signinupform = () => {
   const password = useRef(null);
 
   const handleSignin = () => {
-    debugger
     console.log(email.current.value, password.current.value);
 
     const errorMsgVal = validateSignIn(
@@ -17,6 +21,42 @@ const Signinupform = () => {
       password.current.value
     );
     errorMsgVal ? seterrorMsg(errorMsgVal) : seterrorMsg(null);
+
+    const authentication = auth;
+
+    if (!errorMsgVal) {
+      if (!signIn) {
+        createUserWithEmailAndPassword(
+          authentication,
+          email.current.value,
+          password.current.value
+        )
+          .then((userCredential) => {
+            // Signed up
+            const user = userCredential.user;
+            console.log("USER", user);
+            // ...
+          })
+          .catch((error) => {
+            debugger;
+            const errorMessage = error.message;
+            seterrorMsg(errorMessage);
+            // ..
+          });
+      } else {
+        signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log(user);
+            // ...
+          })
+          .catch((error) => {
+            const errorMessage = error.message;
+            seterrorMsg(errorMessage);
+          });
+      }
+    }
   };
 
   return (
@@ -38,7 +78,7 @@ const Signinupform = () => {
           />
           {
             <input
-              ref={password} 
+              ref={password}
               className="bg-gray-200 rounded py-3 px-4 mb-2 w-80"
               placeholder="Password"
               type="password"

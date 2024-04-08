@@ -7,5 +7,5 @@ export const validateSignIn = (emailId, password) => {
     if( !Emailregex.test(emailId)) return "Email not valid";
     if( !passwordRegex.test(password)) return "Pssword not valid";
 
-    return true;
+    return null;
 };
