@@ -10,16 +10,24 @@ const Signinupform = () => {
   const [signIn, setSignIn] = useState(true);
   const [errorMsg, seterrorMsg] = useState(null);
 
+  const dispName = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
+  const repassword = useRef(null);
 
   const handleSignin = () => {
     console.log(email.current.value, password.current.value);
 
-    const errorMsgVal = validateSignIn(
-      email.current.value,
-      password.current.value
-    );
+    const errorMsgVal = signIn
+      ? validateSignIn(signIn, email.current.value, password.current.value)
+      : validateSignIn(
+          signIn,
+          email.current.value,
+          password.current.value,
+          dispName.current.value,
+          repassword.current.value
+        );
+
     errorMsgVal ? seterrorMsg(errorMsgVal) : seterrorMsg(null);
 
     const authentication = auth;
@@ -35,16 +43,20 @@ const Signinupform = () => {
             // Signed up
             const user = userCredential.user;
             console.log("USER", user);
-            // ...
+            // Additional logic after sign-up
           })
           .catch((error) => {
-            debugger;
             const errorMessage = error.message;
             seterrorMsg(errorMessage);
-            // ..
+            // Handle error
+            console.error("Signup error:", errorMessage);
           });
       } else {
-        signInWithEmailAndPassword(auth, email, password)
+        signInWithEmailAndPassword(
+          authentication,
+          email.current.value,
+          password.current.value
+        )
           .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
@@ -70,6 +82,14 @@ const Signinupform = () => {
           onSubmit={(e) => e.preventDefault()}
           className="flex flex-col items-center"
         >
+          {!signIn && (
+            <input
+              ref={dispName}
+              className="bg-gray-200 rounded py-3 px-4 mb-2 w-80"
+              placeholder="Name"
+              type="text"
+            />
+          )}
           <input
             ref={email}
             className="bg-gray-200 rounded py-3 px-4 mb-2 w-80"
@@ -86,6 +106,7 @@ const Signinupform = () => {
           }
           {!signIn && (
             <input
+              ref={repassword}
               className="bg-gray-200 rounded py-3 px-4 mb-2 w-80"
               placeholder="Re-enter Password"
               type="password"
@@ -100,7 +121,10 @@ const Signinupform = () => {
             </button>
           )}
           {!signIn && (
-            <button className="bg-red-600 text-white  py-2 px-4 mb-2 w-80">
+            <button
+              onClick={handleSignin}
+              className="bg-red-600 text-white  py-2 px-4 mb-2 w-80"
+            >
               Sign Up
             </button>
           )}
