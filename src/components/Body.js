@@ -48,7 +48,7 @@ function Body() {
         dispatch(removeUser());
       }
     });
-  }, [auth]);
+  }, []);
 
   return (
     <div>
